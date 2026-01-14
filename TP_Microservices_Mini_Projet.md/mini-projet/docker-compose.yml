@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  person-service:
+    build: ./person-service
+    container_name: person-service
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./person-service:/app
+    environment:
+      - SECRET_KEY=supersecretkey
+      - AUTH_USER=admin
+      - AUTH_PASSWORD=password
+      - DATABASE_URL=sqlite:///database.db
+
+  health-service:
+    build: ./health-service
+    container_name: health-service
+    ports:
+      - "5002:5002"
+    depends_on:
+      - person-service
+    volumes:
+      - ./health-service:/app
+      - ./template:/app/template
+    environment:
+      - PERSON_SERVICE_URL=http://person-service:5001
+      - SECRET_KEY=supersecretkey

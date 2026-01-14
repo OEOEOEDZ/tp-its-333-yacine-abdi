@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gestion Santé</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #f0f2f5;
+            min-height: 100vh;
+        }
+        
+        /* PAGE DE CONNEXION */
+        .login-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-box h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 1.8em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .status-msg {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            display: none;
+        }
+        
+        .status-msg.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-msg.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* PAGE DASHBOARD */
+        .dashboard-page {
+            display: none;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 1.8em;
+        }
+        
+        .btn-logout {
+            padding: 10px 20px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn-logout:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .input-group input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            font-size: 0.85em;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+            padding: 5px 10px;
+            font-size: 0.85em;
+        }
+        
+        .btn-info:hover {
+            background: #138496;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #667eea;
+            color: #333;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .status {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            display: none;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 40px 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .input-group {
+                flex-direction: column;
+            }
+            .input-group input {
+                width: 100%;
+            }
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .login-box {
+                margin: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE LOGIN -->
+    <div class="login-page" id="loginPage">
+        <div class="login-box">
+            <h1>🏥 Connexion</h1>
+            <div class="form-group">
+                <label>Nom d'utilisateur</label>
+                <input type="text" id="username" placeholder="admin" value="admin">
+            </div>
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <input type="password" id="password" placeholder="password" value="password">
+            </div>
+            <button class="btn-login" onclick="login()">Se Connecter</button>
+            <div id="msgLogin" class="status-msg"></div>
+        </div>
+    </div>
+
+    <!-- PAGE DASHBOARD -->
+    <div class="dashboard-page" id="dashboardPage">
+        <div class="header">
+            <h1>🏥 Gestion Santé</h1>
+            <button class="btn-logout" onclick="logout()">Déconnexion</button>
+        </div>
+
+        <div class="container">
+            <!-- AJOUTER PERSONNE -->
+            <div class="card">
+                <h2>➕ Ajouter une Personne</h2>
+                <div class="input-group">
+                    <input type="text" id="newName" placeholder="Entrez le nom de la personne">
+                    <input type="number" id="newPoids" placeholder="Poids (kg)" step="0.1" min="0">
+                    <input type="number" id="newTaille" placeholder="Taille (cm)" step="0.1" min="0">
+                    <input type="number" id="newTension" placeholder="Tension (bpm)" min="0">
+                    <button class="btn btn-success" onclick="createPerson()">Ajouter</button>
+                </div>
+                <div id="msgCreate" class="status"></div>
+            </div>
+
+            <!-- LISTE PERSONNES -->
+            <div class="card">
+                <h2>👥 Liste des Personnes</h2>
+                <button class="btn btn-primary" onclick="loadPersons()" style="margin-bottom: 15px;">🔄 Actualiser</button>
+                <table id="tablePersonnes">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Poids (kg)</th>
+                            <th>Taille (cm)</th>
+                            <th>Tension (bpm)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listBody">
+                        <tr><td colspan="6" class="empty-state">Aucune personne. Créez-en une !</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- GESTION SANTE -->
+            <div class="card" id="cardSante" style="display:none;">
+                <h2>💊 Gestion Santé - <span id="nomPersonneSante"></span></h2>
+                <div class="input-group">
+                    <input type="number" id="poids" placeholder="Poids (kg)" step="0.1" min="0">
+                    <input type="number" id="taille" placeholder="Taille (cm)" step="0.1" min="0">
+                    <input type="number" id="tension" placeholder="Tension (bpm)" min="0">
+                </div>
+                <div class="input-group">
+                    <button class="btn btn-success" onclick="saveSante()" style="flex:1;">💾 Sauvegarder</button>
+                    <button class="btn btn-danger" onclick="deleteSante()" style="flex:1;">🗑️ Supprimer Données</button>
+                    <button class="btn btn-primary" onclick="cancelSante()" style="flex:1;">❌ Annuler</button>
+                </div>
+                <div id="msgSante" class="status"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5001'
+        const HEALTH_URL = 'http://localhost:5002'
+        let token = ''
+        let currentPersonId = null
+
+        function showMsg(elementId, msg, success) {
+            const el = document.getElementById(elementId)
+            el.textContent = msg
+            el.className = 'status' + (elementId.includes('Login') ? '-msg' : '') + (success ? ' success' : ' error')
+            el.style.display = 'block'
+            if (success) setTimeout(() => el.style.display = 'none', 3000)
+        }
+
+        function getHeaders() {
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        }
+
+        // LOGIN
+        window.login = async () => {
+            const user = document.getElementById('username').value
+            const pass = document.getElementById('password').value
+
+            try {
+                const r = await fetch(API_URL + '/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                })
+                const d = await r.json()
+                
+                if (r.ok) {
+                    token = d.access_token
+                    document.getElementById('loginPage').style.display = 'none'
+                    document.getElementById('dashboardPage').style.display = 'block'
+                    loadPersons()
+                } else {
+                    showMsg('msgLogin', 'Erreur: ' + (d.error || 'Connexion impossible'), false)
+                }
+            } catch (e) {
+                showMsg('msgLogin', 'Erreur réseau', false)
+            }
+        }
+
+        // LOGOUT
+        window.logout = () => {
+            token = ''
+            document.getElementById('loginPage').style.display = 'flex'
+            document.getElementById('dashboardPage').style.display = 'none'
+            document.getElementById('cardSante').style.display = 'none'
+            document.getElementById('username').value = 'admin'
+            document.getElementById('password').value = 'password'
+        }
+
+        // CREER PERSONNE
+        window.createPerson = async () => {
+            const name = document.getElementById('newName').value
+            const poids = parseFloat(document.getElementById('newPoids').value)
+            const taille = parseFloat(document.getElementById('newTaille').value)
+            const tension = parseFloat(document.getElementById('newTension').value)
+
+            if (!name.trim()) {
+                showMsg('msgCreate', 'Entrez un nom', false)
+                return
+            }
+
+            try {
+                // Créer la personne
+                const r = await fetch(API_URL + '/persons', {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({ name })
+                })
+                const d = await r.json()
+
+                if (!r.ok) {
+                    showMsg('msgCreate', 'Erreur: ' + (d.error || 'Création échouée'), false)
+                    return
+                }
+
+                const personId = d.id
+
+                // Si les données de santé sont remplies, les ajouter aussi
+                if (poids && taille && tension) {
+                    try {
+                        await fetch(HEALTH_URL + '/health/' + personId, {
+                            method: 'POST',
+                            headers: getHeaders(),
+                            body: JSON.stringify({
+                                weight: poids,
+                                height: taille,
+                                heart_rate: tension
+                            })
+                        })
+                    } catch (e) {}
+                }
+
+                showMsg('msgCreate', '✅ Personne créée !', true)
+                document.getElementById('newName').value = ''
+                document.getElementById('newPoids').value = ''
+                document.getElementById('newTaille').value = ''
+                document.getElementById('newTension').value = ''
+                loadPersons()
+            } catch (e) {
+                showMsg('msgCreate', 'Erreur réseau', false)
+            }
+        }
+
+        // CHARGER LISTE
+        window.loadPersons = async () => {
+            try {
+                const r = await fetch(API_URL + '/persons', {
+                    headers: getHeaders()
+                })
+                const data = await r.json()
+
+                const tbody = document.getElementById('listBody')
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Aucune personne</td></tr>'
+                    return
+                }
+
+                tbody.innerHTML = ''
+                for (const p of data) {
+                    // Récupérer les données de santé
+                    let sante = {}
+                    try {
+                        const healthR = await fetch(HEALTH_URL + '/health/' + p.id, {
+                            headers: getHeaders()
+                        })
+                        if (healthR.ok) {
+                            sante = await healthR.json()
+                        }
+                    } catch (e) {}
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${p.id}</td>
+                            <td>${p.name}</td>
+                            <td>${sante.weight || '-'}</td>
+                            <td>${sante.height || '-'}</td>
+                            <td>${sante.heart_rate || '-'}</td>
+                            <td class="actions">
+                                <button class="btn btn-info" onclick="editSante(${p.id}, '${p.name}', ${sante.weight || 0}, ${sante.height || 0}, ${sante.heart_rate || 0})">📋 Santé</button>
+                                <button class="btn btn-danger" onclick="deletePerson(${p.id})">❌ Supprimer</button>
+                            </td>
+                        </tr>
+                    `
+                }
+            } catch (e) {
+                document.getElementById('listBody').innerHTML = '<tr><td colspan="6" class="empty-state">Erreur de chargement</td></tr>'
+            }
+        }
+
+        // EDITER SANTE
+        window.editSante = (id, nom, weight, height, heartRate) => {
+            currentPersonId = id
+            document.getElementById('cardSante').style.display = 'block'
+            document.getElementById('nomPersonneSante').textContent = nom
+            document.getElementById('poids').value = weight || ''
+            document.getElementById('taille').value = height || ''
+            document.getElementById('tension').value = heartRate || ''
+            document.getElementById('msgSante').style.display = 'none'
+        }
+
+        // SAUVEGARDER SANTE
+        window.saveSante = async () => {
+            if (!currentPersonId) {
+                showMsg('msgSante', 'Erreur: personne non sélectionnée', false)
+                return
+            }
+
+            const weight = parseFloat(document.getElementById('poids').value)
+            const height = parseFloat(document.getElementById('taille').value)
+            const heartRate = parseFloat(document.getElementById('tension').value)
+
+            if (!weight || !height || !heartRate) {
+                showMsg('msgSante', 'Remplissez tous les champs', false)
+                return
+            }
+
+            try {
+                const r = await fetch(HEALTH_URL + '/health/' + currentPersonId, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({
+                        weight,
+                        height,
+                        heart_rate: heartRate
+                    })
+                })
+                const d = await r.json()
+
+                if (r.ok) {
+                    showMsg('msgSante', '✅ Données sauvegardées !', true)
+                    setTimeout(() => {
+                        document.getElementById('cardSante').style.display = 'none'
+                        loadPersons()
+                    }, 1500)
+                } else {
+                    showMsg('msgSante', 'Erreur: ' + (d.error || 'Erreur sauvegarde'), false)
+                }
+            } catch (e) {
+                showMsg('msgSante', 'Erreur réseau', false)
+            }
+        }
+
+        // SUPPRIMER SANTE
+        window.deleteSante = async () => {
+            if (!confirm('Supprimer les données de santé ?')) return
+
+            try {
+                const r = await fetch(HEALTH_URL + '/health/' + currentPersonId, {
+                    method: 'DELETE',
+                    headers: getHeaders()
+                })
+
+                if (r.ok || r.status === 204) {
+                    showMsg('msgSante', '✅ Données supprimées !', true)
+                    setTimeout(() => {
+                        document.getElementById('cardSante').style.display = 'none'
+                        loadPersons()
+                    }, 1500)
+                } else {
+                    showMsg('msgSante', 'Erreur suppression', false)
+                }
+            } catch (e) {
+                showMsg('msgSante', 'Erreur réseau', false)
+            }
+        }
+
+        // ANNULER EDTION SANTE
+        window.cancelSante = () => {
+            document.getElementById('cardSante').style.display = 'none'
+            currentPersonId = null
+        }
+
+        // SUPPRIMER PERSONNE
+        window.deletePerson = async (id) => {
+            if (!confirm('Supprimer cette personne ?')) return
+
+            try {
+                const r = await fetch(API_URL + '/persons/' + id, {
+                    method: 'DELETE',
+                    headers: getHeaders()
+                })
+
+                if (r.ok || r.status === 204) {
+                    loadPersons()
+                } else {
+                    alert('Erreur suppression')
+                }
+            } catch (e) {
+                alert('Erreur réseau')
+            }
+        }
+    </script>
+</body>
+</html>
