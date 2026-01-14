@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Résultat Recherche</title>
+</head>
+<body>
+    <h1>Page de Recherche</h1>
+    
+    <p>Vous avez lancé une recherche sur le terme : <b>{{ le_terme }}</b></p>
+    
+    {% if le_terme == 'Inconnu' %}
+        <p style="color: red;">Attention : Vous n'avez rien spécifié dans l'URL !</p>
+        <p>Essayez d'ajouter ?term=VotreMot à la fin de l'adresse.</p>
+    {% else %}
+        <p style="color: green;">Recherche en cours...</p>
+    {% endif %}
+</body>
+</html>

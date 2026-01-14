@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>{% if etudiant %}Modifier{% else %}Nouveau{% endif %} étudiant</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;background:#f7f9fc;color:#333;padding:20px}
+    .container{max-width:600px;margin:0 auto;background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+    h3{margin-top:0}
+    form label{display:block;margin:12px 0 6px;font-weight:600}
+    input[type="text"], input[type="password"], textarea{width:100%;padding:8px;border:1px solid #dfe3e8;border-radius:6px}
+    .btn{background:#2b8be8;color:#fff;padding:8px 14px;border-radius:6px;text-decoration:none;border:none;cursor:pointer}
+    .btn.secondary{background:#6c757d}
+    .actions{display:flex;justify-content:space-between;align-items:center;margin-top:15px}
+    .note{color:#666;font-size:0.9em;margin-top:10px}
+  </style>
+</head>
+<body>
+<div class="container">
+  <h3>{% if etudiant %}Modifier{% else %}Nouveau{% endif %} étudiant</h3>
+  <form method="POST" action="{% if etudiant %}{{ url_for('edit_etudiant', id=etudiant.id) }}{% else %}{{ url_for('auth') }}{% endif %}">
+    <label>Nom</label>
+    <input type="text" name="nom" value="{{ etudiant.nom if etudiant else '' }}" {% if etudiant %}readonly{% endif %} required/>
+
+    <label>Adresse</label>
+    <textarea name="addr" rows="3">{{ etudiant.addr if etudiant else '' }}</textarea>
+
+    <label>PINCODE</label>
+    <input type="text" name="pin" value="{{ etudiant.pin if etudiant else '' }}"/>
+
+    {% if not etudiant %}
+    <label>Mot de passe pour valider l'ajout</label>
+    <input type="password" name="password" required/>
+    {% endif %}
+
+    <div class="actions">
+      <a class="btn secondary" href="{{ url_for('index') }}">⬅ Retour</a>
+      <button class="btn" type="submit">{% if etudiant %}Mettre à jour{% else %}Ajouter l'étudiant{% endif %}</button>
+    </div>
+  </form>
+  <p class="note">Les champs marqués * sont requis.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+patients_db ={
+    "patients" : [
+        {
+            "id": 1,
+            "nom": "Yannick Bolasie",
+            "GS": "AB",
+            "pathologie": "diabete"
+        },
+        {
+            "id": 2,
+            "nom": "Marco Verratti",
+            "GS": "B",
+            "pathologie": "asthme"
+        },
+        {
+            "id": 3,
+            "nom": "Nasser Al-khelaïfi",
+            "GS": "O",
+            "pathologie": "hypertension"
+        }
+    ]
+}
+
+

@@ -1,0 +1,85 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Étudiants",
+    "version": "1.0.0",
+    "description": "API minimale pour gérer les étudiants (liste, création, mise à jour)"
+  },
+  "paths": {
+    "/api/students": {
+      "get": {
+        "summary": "Lister les étudiants",
+        "responses": {
+          "200": {
+            "description": "Liste des étudiants",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {"$ref": "#/components/schemas/Etudiant"}
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer un étudiant",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/EtudiantCreate"}
+            }
+          }
+        },
+        "responses": {"201": {"description": "Etudiant créé"}}
+      }
+    },
+    "/api/students/{id}": {
+      "get": {
+        "summary": "Récupérer un étudiant",
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "integer"}}],
+        "responses": {"200": {"description": "Etudiant"}}
+      },
+      "put": {
+        "summary": "Mettre à jour un étudiant",
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "integer"}}],
+        "requestBody": {
+          "required": true,
+          "content": {"application/json": {"schema": {"$ref": "#/components/schemas/EtudiantUpdate"}}}
+        },
+        "responses": {"200": {"description": "Mise à jour effectuée"}}
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Etudiant": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "integer"},
+          "nom": {"type": "string"},
+          "addr": {"type": "string"},
+          "pin": {"type": "string"}
+        }
+      },
+      "EtudiantCreate": {
+        "type": "object",
+        "required": ["nom"],
+        "properties": {
+          "nom": {"type": "string"},
+          "addr": {"type": "string"},
+          "pin": {"type": "string"}
+        }
+      },
+      "EtudiantUpdate": {
+        "type": "object",
+        "properties": {
+          "addr": {"type": "string"},
+          "pin": {"type": "string"}
+        }
+      }
+    }
+  }
+}
